@@ -1,0 +1,39 @@
+services:
+
+  escalayt:
+    container_name: escalayt_container
+    build:
+      context: .
+      args:
+        CONTAINER_PORT: ${CONTAINER_PORT}
+    image: escalayt_app:v1
+    restart: unless-stopped
+#    env_file:
+#      - ${ENV_FILE}
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    networks:
+      - escalayt_network
+
+
+  postgres:
+    image: postgres
+    container_name: escalayt_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: escalaytapp
+    ports:
+      - 5435:5432
+#    volumes:
+#      - /Users/gamp/volume/postgres_container/new_pgdata:/var/lib/postgresql/data/pgdata
+    networks:
+      - escalayt_network
+
+networks:
+  escalayt_network:
+    driver: bridge
